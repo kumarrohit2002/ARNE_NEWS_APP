@@ -69,14 +69,19 @@ class _HomeState extends State<Home> {
               scrollDirection: Axis.horizontal,
               itemCount: navBarItem.length,
               itemBuilder: (context,index){
-                return Container(
-                  padding: EdgeInsets.symmetric(horizontal: 30,vertical: 15),
-                  margin: EdgeInsets.symmetric(horizontal: 5),
-                  decoration: BoxDecoration(color: Colors.blue,borderRadius: BorderRadius.circular(15)),
-                  child:Center(child: Text(navBarItem[index]
-                    ,style: TextStyle(color: Colors.white,fontSize: 30,fontWeight: FontWeight.bold),
-                  )
-                  ) ,
+                return InkWell(
+                  onTap: (){
+                    print(navBarItem[index]);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 30,vertical: 15),
+                    margin: EdgeInsets.symmetric(horizontal: 5),
+                    decoration: BoxDecoration(color: Colors.blue,borderRadius: BorderRadius.circular(15)),
+                    child:Center(child: Text(navBarItem[index]
+                      ,style: TextStyle(color: Colors.white,fontSize: 30,fontWeight: FontWeight.bold),
+                    )
+                    ) ,
+                  ),
                 );
               }
             ),
