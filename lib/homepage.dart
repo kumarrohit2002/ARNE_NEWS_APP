@@ -11,6 +11,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     TextEditingController searchController = new TextEditingController();
+    List<String> navBarItem=["Top NEWS","India","World","Finacnce","Health"];
     return Scaffold(
       appBar: AppBar(
         title: Text("ARNE NEWS"),
@@ -58,6 +59,26 @@ class _HomeState extends State<Home> {
                   ),
                 )
               ],
+            ),
+          ),
+
+          Container(
+            height: 100,
+            child: ListView.builder(
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: navBarItem.length,
+              itemBuilder: (context,index){
+                return Container(
+                  padding: EdgeInsets.symmetric(horizontal: 30,vertical: 15),
+                  margin: EdgeInsets.symmetric(horizontal: 5),
+                  decoration: BoxDecoration(color: Colors.blue,borderRadius: BorderRadius.circular(15)),
+                  child:Center(child: Text(navBarItem[index]
+                    ,style: TextStyle(color: Colors.white,fontSize: 30,fontWeight: FontWeight.bold),
+                  )
+                  ) ,
+                );
+              }
             ),
           ),
 
