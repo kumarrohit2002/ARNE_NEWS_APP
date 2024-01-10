@@ -93,23 +93,46 @@ class _HomeState extends State<Home> {
         
             CarouselSlider(
                 options : CarouselOptions(
-                    height : 250,
+                    height : 220,
                     autoPlay : true,
                     enlargeCenterPage : true
                 ),
                 items : items.map((item) {
                   return Builder(
                       builder: (BuildContext context){
-                        return InkWell(
-                          onTap: () {
-                            print("MUJHE MARRO MAT");
-                          },
-                          child: Container(
-        
-                            width: 400,
-                            decoration: BoxDecoration(color: Colors.blue),
-                            margin : EdgeInsets.symmetric(horizontal : 3 , vertical : 14),
-                            child : Text(item,style: TextStyle(color: Colors.white,fontSize: 30),),
+                        return Container(
+                          // margin: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
+                          // Image.asset("images/braking_news.jpeg",),
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            elevation: 1.0,
+                            child: Stack(
+                              children: [
+                                Container(
+
+                                  margin: EdgeInsets.symmetric(horizontal: 1),
+                                  height: 220,
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(15),
+                                      child: Image.asset("images/braking_news.jpeg",
+                                        fit: BoxFit.cover, // Set this to cover the entire container
+                                      )),
+                                ),
+                                Positioned(
+                                    left: 0,
+                                    right: 0,
+                                    bottom: 0,
+                                    child: Container(
+                                        padding: EdgeInsets.symmetric(horizontal: 10,vertical: 3),
+                                        child: Text("Braking News",
+                                          style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.bold),
+                                        )
+                                    )
+                                )
+                              ],
+                            ),
                           ),
                         );
                       }
@@ -118,46 +141,67 @@ class _HomeState extends State<Home> {
             ),
         
             Container(
-              child: ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: 5,
-                  itemBuilder: (context,index){
-                  return Container(
-                    margin: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
-                      // Image.asset("images/braking_news.jpeg",),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      elevation: 1.0,
-                      child: Stack(
-                        children: [
-                          Container(
-
-                            width: 400,
-                            child: ClipRRect(
-                                borderRadius: BorderRadius.circular(15),
-                                child: Image.asset("images/braking_news.jpeg",
-                                  fit: BoxFit.cover, // Set this to cover the entire container
-                                )),
+              child: Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.fromLTRB(15, 10, 0, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text("Latest news",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 28),),
+                      ],
+                    ),
+                  ),
+                  ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: 5,
+                      itemBuilder: (context,index){
+                      return Container(
+                        margin: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
+                          // Image.asset("images/braking_news.jpeg",),
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
                           ),
-                          Positioned(
-                            left: 0,
-                              right: 0,
-                              bottom: 0,
-                              child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 10,vertical: 3),
-                                  child: Text("Braking News",
-                                    style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.bold),
+                          elevation: 1.0,
+                          child: Stack(
+                            children: [
+                              Container(
+
+                                width: 400,
+                                child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(15),
+                                    child: Image.asset("images/braking_news.jpeg",
+                                      fit: BoxFit.cover, // Set this to cover the entire container
+                                    )),
+                              ),
+                              Positioned(
+                                left: 0,
+                                  right: 0,
+                                  bottom: 0,
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 10,vertical: 3),
+                                      child: Text("Braking News",
+                                        style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.bold),
+                                      )
                                   )
                               )
-                          )
-                        ],
-                      ),
-                    ),
-                  );
-              }),
+                            ],
+                          ),
+                        ),
+                      );
+                  }),
+                ],
+              ),
+            ),
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(onPressed: ()=>{}, child: Text("show more"))
+                ],
+              ),
             ),
           ],
         ),
