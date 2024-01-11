@@ -1,31 +1,65 @@
+import 'dart:convert';
+
+import 'package:arne_news/model.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:http/http.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
-
+  // const Home({super.key});
+  const Home({Key? key}) : super(key: key);
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
+  final List items = ["HELLO MAN" , "NAMAS STAY", "DIRTY FELLOW" ];
+  TextEditingController searchController = new TextEditingController();
+  List<NewsQueryModel> newsModelList=<NewsQueryModel>[];
+  List<String> navBarItem=["Top NEWS","India","World","Finacnce","Health"];
+  bool isLoading=true;
+
+  getNewsByQuery(String query) async {
+    String url =
+        "https://newsapi.org/v2/everything?q=$query&from=2023-12-11&sortBy=publishedAt&apiKey=81e6c35d67034da283417bc9302ca248";
+    Response response = await get(Uri.parse(url));
+    Map data = jsonDecode(response.body);
+    setState(() {
+      data["articles"].forEach((element) {
+        NewsQueryModel newsQueryModel = new NewsQueryModel();
+        newsQueryModel = NewsQueryModel.fromMap(element);
+        newsModelList.add(newsQueryModel);
+        setState(() {
+          isLoading = false;
+        });
+
+      });
+    });
+
+  }
+
+
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getNewsByQuery("world");
+    // getNewsofIndia();
+  }
+
   @override
   Widget build(BuildContext context) {
-    TextEditingController searchController = new TextEditingController();
-    List<String> navBarItem=["Top NEWS","India","World","Finacnce","Health"];
-    final List items = ["HELLO MAN" , "NAMAS STAY", "DIRTY FELLOW" ];
     return Scaffold(
       appBar: AppBar(
         title: Text("ARNE NEWS"),
         centerTitle: true,
       ),
-      body: 
+      body:
       SingleChildScrollView(
         child: Column(
           children: [
             Container(
               //Search Wala Container
-        
+
               padding: EdgeInsets.symmetric(horizontal: 8),
               margin: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
               decoration: BoxDecoration(
@@ -65,7 +99,7 @@ class _HomeState extends State<Home> {
                 ],
               ),
             ),
-        
+
             Container(
               height: 55,
               child: ListView.builder(
@@ -90,7 +124,7 @@ class _HomeState extends State<Home> {
                 }
               ),
             ),
-        
+
             CarouselSlider(
                 options : CarouselOptions(
                     height : 220,
@@ -139,7 +173,7 @@ class _HomeState extends State<Home> {
                   );
                 }).toList(),
             ),
-        
+
             Container(
               child: Column(
                 children: [
@@ -155,7 +189,7 @@ class _HomeState extends State<Home> {
                   ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: 5,
+                    itemCount: newsModelList.length,
                       itemBuilder: (context,index){
                       return Container(
                         margin: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
@@ -172,9 +206,11 @@ class _HomeState extends State<Home> {
                                 width: 400,
                                 child: ClipRRect(
                                     borderRadius: BorderRadius.circular(15),
-                                    child: Image.asset("images/braking_news.jpeg",
-                                      fit: BoxFit.cover, // Set this to cover the entire container
-                                    )),
+                                    child: Image.network(newsModelList[index].newsImg ,fit: BoxFit.fitHeight, height: 230,width: double.infinity, ),
+                                    // Image.asset("images/braking_news.jpeg",
+                                    //   fit: BoxFit.cover, // Set this to cover the entire container
+                                    // )
+                                ),
                               ),
                               Positioned(
                                 left: 0,
@@ -182,8 +218,15 @@ class _HomeState extends State<Home> {
                                   bottom: 0,
                                   child: Container(
                                     padding: EdgeInsets.symmetric(horizontal: 10,vertical: 3),
-                                      child: Text("Braking News",
-                                        style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.bold),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(newsModelList[index].newsHead,
+                                            style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(newsModelList[index].newsDes.length>50? "${newsModelList[index].newsDes.substring(0,55)}":newsModelList[index].newsDes,
+                                            style: TextStyle(color: Colors.white),)
+                                        ],
                                       )
                                   )
                               )
