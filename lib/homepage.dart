@@ -16,19 +16,57 @@ class _HomeState extends State<Home> {
   final List items = ["HELLO MAN" , "NAMAS STAY", "DIRTY FELLOW" ];
   TextEditingController searchController = new TextEditingController();
   List<NewsQueryModel> newsModelList=<NewsQueryModel>[];
+  List<NewsQueryModel> newsModelCarousel=<NewsQueryModel>[];
   List<String> navBarItem=["Top NEWS","India","World","Finacnce","Health"];
   bool isLoading=true;
 
   getNewsByQuery(String query) async {
     String url =
-        "https://newsapi.org/v2/everything?q=$query&from=2023-12-11&sortBy=publishedAt&apiKey=81e6c35d67034da283417bc9302ca248";
+        "https://newsapi.org/v2/everything?q=$query&from=2023-12-12&sortBy=publishedAt&apiKey=81e6c35d67034da283417bc9302ca248";
+    try {
+      Response response = await get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        Map data = jsonDecode(response.body);
+
+        // Check if "articles" is not null before calling forEach
+        if (data["articles"] != null) {
+          List<dynamic> articles = data["articles"];
+
+          setState(() {
+            newsModelList
+                .clear(); // Clear the existing list before adding new items
+
+            articles.forEach((element) {
+              NewsQueryModel newsQueryModel = NewsQueryModel.fromMap(element);
+              newsModelList.add(newsQueryModel);
+            });
+
+            isLoading = false;
+          });
+        } else {
+          // Handle the case where "articles" is null
+          print("No articles found in the response");
+        }
+      } else {
+        // Handle API error (non-200 status code)
+        print("API request failed with status code: ${response.statusCode}");
+      }
+    } catch (e) {
+      // Handle general exception
+      print("Error occurred: $e");
+    }
+  }
+
+  getNewsofIndia() async {
+    String url = "https://newsapi.org/v2/top-headlines?country=in&apiKey=81e6c35d67034da283417bc9302ca248";
     Response response = await get(Uri.parse(url));
     Map data = jsonDecode(response.body);
     setState(() {
       data["articles"].forEach((element) {
         NewsQueryModel newsQueryModel = new NewsQueryModel();
         newsQueryModel = NewsQueryModel.fromMap(element);
-        newsModelList.add(newsQueryModel);
+        newsModelCarousel.add(newsQueryModel);
         setState(() {
           isLoading = false;
         });
@@ -36,14 +74,15 @@ class _HomeState extends State<Home> {
       });
     });
 
+
   }
 
 
   void initState() {
     // TODO: implement initState
     super.initState();
-    getNewsByQuery("world");
-    // getNewsofIndia();
+    getNewsByQuery("news");
+    getNewsofIndia();
   }
 
   @override
@@ -131,7 +170,7 @@ class _HomeState extends State<Home> {
                     autoPlay : true,
                     enlargeCenterPage : true
                 ),
-                items : items.map((item) {
+                items : newsModelCarousel.map((instance) {
                   return Builder(
                       builder: (BuildContext context){
                         return Container(
@@ -146,11 +185,11 @@ class _HomeState extends State<Home> {
                               children: [
                                 Container(
 
-                                  margin: EdgeInsets.symmetric(horizontal: 1),
+                                  margin: EdgeInsets.symmetric(horizontal: 0),
                                   height: 220,
                                   child: ClipRRect(
                                       borderRadius: BorderRadius.circular(15),
-                                      child: Image.asset("images/braking_news.jpeg",
+                                      child: Image.network(instance.newsImg,
                                         fit: BoxFit.cover, // Set this to cover the entire container
                                       )),
                                 ),
@@ -160,8 +199,11 @@ class _HomeState extends State<Home> {
                                     bottom: 0,
                                     child: Container(
                                         padding: EdgeInsets.symmetric(horizontal: 10,vertical: 3),
-                                        child: Text("Braking News",
-                                          style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.bold),
+                                        child: Container(
+                                          margin: EdgeInsets.symmetric(horizontal: 5,),
+                                          child: Text(instance.newsHead,
+                                            style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.bold),
+                                          ),
                                         )
                                     )
                                 )
