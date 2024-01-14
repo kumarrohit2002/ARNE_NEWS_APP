@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:arne_news/category.dart';
 import 'package:arne_news/model.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -81,7 +81,7 @@ class _HomeState extends State<Home> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getNewsByQuery("news");
+    getNewsByQuery("World");
     getNewsofIndia();
   }
 
@@ -148,7 +148,7 @@ class _HomeState extends State<Home> {
                 itemBuilder: (context,index){
                   return InkWell(
                     onTap: (){
-                      print(navBarItem[index]);
+                     Navigator.push(context, MaterialPageRoute(builder: (context) => Category(Query: navBarItem[index])));
                     },
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 30,vertical: 15),
